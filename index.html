@@ -1,0 +1,69 @@
+<html>
+  <head>    
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+    />
+    <style type="text/css">     
+      <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+  </head>
+  <body>
+    <div class="container">      
+      <div class="row">
+        <div class="col-12" style="padding-top:10px">         
+          <button type="button" class="btn btn-success" id="button">
+            Buscar imagens
+          </button>
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div id="resultados"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script> 
+      var urlApi, RetornoAPI, urlApi_size, tamanhoImagem;
+      urlApi =
+        "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=ca370d51a054836007519a00ff4ce59e&per_page=6&format=json&nojsoncallback=1";
+
+        tamanhoImagem = 500;
+
+      $(document).ready(function() {
+        $("#button").click(function() {
+          $.getJSON(urlApi, function(json) {
+            $.each(json.photos.photo, function(i, RetornoAPI) {
+              urlApi_size =
+                "https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=ca370d51a054836007519a00ff4ce59e&photo_id=" +
+                RetornoAPI.id +
+                "&format=json&nojsoncallback=1";
+              $.getJSON(urlApi_size, function(size) {
+                $.each(size.sizes.size, function(i, RetornoAPI_size) {
+                  if (RetornoAPI_size.width == tamanhoImagem) {                      
+                    $("#resultados").append(
+                      '<p><a href="' +
+                        RetornoAPI_size.url +
+                        '" target="_blank"><img src="' +
+                        RetornoAPI_size.source +
+                        '"/></a></p>'
+                    );
+                  }
+                });
+              });
+            });
+          });
+        });
+      });
+    </script>
+
+
+
+
+</html>
